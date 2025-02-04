@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vite + React</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>
+
+import { Canvas, useFrame } from "@react-three/fiber";
+import { OrbitControls, Sparkles } from "@react-three/drei";
+import { useRef } from "react";
+
+const RotateControls = () => {
+    const meshRef = useRef(null);
+
+    useFrame(() => {
+        if (meshRef.current) {
+            meshRef.current.rotation.y += 0.01;
+            meshRef.current.rotation.z += 0.01;
+        }
+    });
+
+    return (
+        <mesh ref={meshRef}>
+            <cylinderGeometry args={[1, 1, 2]} />
+            <meshLambertMaterial color={"blue"} />
+        </mesh>
+    );
+};
+
+const App = () => {
+    return (
+        <Canvas
+            style={{
+                height: "100vh",
+                width: "100vw",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+            }}
+        >
+            <OrbitControls enableZoom={true} enablePan={true} enableRotate={true} />
+            <directionalLight position={[1, 1, 1]} intensity={1} color="white" />
+            <color attach="background" args={["#F0F0F0"]} />
+            <RotateControls />
+            <Sparkles
+                count={2000}
+                scale={3}
+                size={5}
+                speed={0.3}
+                noise={0.5}
+                color={"#FFD700"}
+            />
+        </Canvas>
+    );
+};
+
+export default App;
